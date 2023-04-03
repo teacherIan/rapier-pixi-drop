@@ -21,7 +21,7 @@ let pearlMaxAmount = 4000
 let sapphireMaxAmount = 4000
 let circleSize = 6
 
-let gameSpeed = 200
+let gameSpeed = 300
 
 async function start() {
   // setup the renderer

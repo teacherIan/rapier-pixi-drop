@@ -55,7 +55,7 @@ export const spawnRandomBall = (
 
   const rubyDefinition: BallDefinition = {
     position: {
-      x: (window.innerWidth / 8 * Math.random()) + 3 ,
+      x: (window.innerWidth / 5 * Math.random()) + 10 ,
       y:  -1000 - amount * 10
     },
     radius: maxRadius,

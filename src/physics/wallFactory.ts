@@ -16,7 +16,7 @@ export const makeWall = (
     new RAPIER.Cuboid(definition.size.x / 2, definition.size.y / 2)
   ).setTranslation(0, 0);
   const collider = world.createCollider(colliderDesc, body);
-  collider.setCollisionGroups(0b00000000000011110000000000001111)
+  collider.setCollisionGroups(0b00000000000111110000000000011111)
 
   return { body, collider, definition };
 };
@@ -32,7 +32,7 @@ export const wallScreenArea = (
   walls.push(
     makeWall(world, RAPIER, {
       angle: 0,
-      size: { y: window.innerHeight * 3, x: thickness },
+      size: { y: window.innerHeight * 5, x: thickness },
       position: { x: 0, y: window.innerHeight / 2 },
     })
   );
@@ -41,7 +41,7 @@ export const wallScreenArea = (
   walls.push(
     makeWall(world, RAPIER, {
       angle: 0,
-      size: { y: window.innerHeight * 4, x: thickness },
+      size: { y: window.innerHeight * 5, x: thickness },
 
       position: { x: window.innerWidth, y: window.innerHeight / 2 },
     })
@@ -60,7 +60,7 @@ export const wallScreenArea = (
 
     walls.push(
       makeWall(world, RAPIER, {
-        size: { y: window.innerHeight * 4, x: thickness },
+        size: { y: window.innerHeight * 5, x: thickness },
         position: { x: window.innerWidth / 2 - thickness / 2, y: window.innerHeight / 2 },
         angle: 0,
       })
