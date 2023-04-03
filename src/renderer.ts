@@ -5,7 +5,7 @@ export class Renderer {
   stage: PIXI.Container;
 
   constructor() {
-    this.app = new PIXI.Application({
+    this.app = new PIXI.Application<HTMLCanvasElement>({
       width: window.innerWidth,
       height: window.innerHeight,
       backgroundColor: 0xffffff,
@@ -15,8 +15,8 @@ export class Renderer {
     });
     // PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
-    document.body.appendChild(this.app.view);
-    this.app.view.id = "pixi-view";
+    document.body.appendChild(this.app.view as any);
+    // this.app.view.id = "pixi-view";
 
     this.stage = this.app.stage;
 
