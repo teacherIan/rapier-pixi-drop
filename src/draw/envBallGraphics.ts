@@ -12,7 +12,7 @@ export const initEnvBallGraphics = () => {
       collider: Collider;
       definition: BallDefinition;
       
-    }[],color
+    }[],color: string
   ) => {
 
     let fillColor: number = 0x22ff22;

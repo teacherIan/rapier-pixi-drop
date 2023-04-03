@@ -49,18 +49,63 @@ async function start() {
     definition: BallDefinition;
   }[] = [];
 
-  const sapphireBalls: {
-    body: RigidBody;
-    collider: Collider;
-    definition: BallDefinition;
-  }[] = [];
+  //create pearl balls
 
-  const rubyBalls: {
-    body: RigidBody;
-    collider: Collider;
-    definition: BallDefinition;
-  }[] = [];
+  let pearlInterval = setInterval(() => {
 
+    const bouncyBall = spawnRandomBall(world, RAPIER,circleSize,'pearl');
+    pearlBallsCreated++;
+    if(pearlBallsCreated >= pearlMaxAmount) {
+      clearInterval(pearlInterval)
+      return;
+    }
+
+    const bouncyBallLarge = spawnRandomBall(world, RAPIER,circleSize * 1.414,'pearl');
+    pearlBallsCreated += 2
+    if(pearlBallsCreated >= pearlMaxAmount) {
+      clearInterval(pearlInterval)
+      return;
+    }
+
+    const bouncyBallExtraLarge = spawnRandomBall(world, RAPIER,circleSize * 1.414 * 1.3,'pearl');
+    pearlBallsCreated += 4
+    if(pearlBallsCreated >= pearlMaxAmount) {
+      clearInterval(pearlInterval)
+      return;
+    }
+
+    const bouncyBallExtraExtraLarge = spawnRandomBall(world, RAPIER,circleSize * 1.414 * 1.5,'pearl');
+    pearlBallsCreated += 8
+    if(pearlBallsCreated >= pearlMaxAmount) {
+      clearInterval(pearlInterval)
+      return;
+    }
+
+    const bouncyBallExtraExtraExtraLarge = spawnRandomBall(world, RAPIER,circleSize * 1.414 * 1.7,'pearl');
+    pearlBallsCreated += 16
+    if(pearlBallsCreated >= pearlMaxAmount) {
+      clearInterval(pearlInterval)
+      return;
+    }
+
+    bouncyBall?.collider.setRestitution(.5);
+    bouncyBall?.collider.setCollisionGroups(0b00000000000010000000000000001000)
+    bouncyBallLarge?.collider.setRestitution(.5);
+    bouncyBallLarge?.collider.setCollisionGroups(0b00000000000010000000000000001000)
+    bouncyBallExtraLarge?.collider.setRestitution(.5);
+    bouncyBallExtraLarge?.collider.setCollisionGroups(0b00000000000010000000000000001000)
+    bouncyBallExtraExtraLarge?.collider.setRestitution(.5);
+    bouncyBallExtraExtraLarge?.collider.setCollisionGroups(0b00000000000010000000000000001000)
+    bouncyBallExtraExtraExtraLarge?.collider.setRestitution(.5);
+    bouncyBallExtraExtraExtraLarge?.collider.setCollisionGroups(0b00000000000010000000000000001000)
+
+    envBalls.push(bouncyBall);
+    envBalls.push(bouncyBallLarge);
+    envBalls.push(bouncyBallExtraLarge);
+    envBalls.push(bouncyBallExtraExtraLarge);
+    envBalls.push(bouncyBallExtraExtraExtraLarge);
+
+  }, gameSpeed);
 
   //create amber balls
   let amberInterval = setInterval(() => {

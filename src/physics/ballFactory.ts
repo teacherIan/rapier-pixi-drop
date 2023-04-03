@@ -19,13 +19,6 @@ export const makeBall = (
   let colliderDesc = new RAPIER.ColliderDesc(new RAPIER.Ball(definition.radius))
     .setTranslation(0, 0)
     .setRestitution(0.5)
-    
-    // .setFriction(1)
-    // .setCollisionGroups(num)
-
-    
-    
-    
 
   const collider = world.createCollider(colliderDesc, body);
   
@@ -36,10 +29,7 @@ export const makeBall = (
 
   }, 10000)
   
-  
-  
-  // amount++;
-  
+
 
   return { body, collider, definition };
 };
@@ -65,7 +55,7 @@ export const spawnRandomBall = (
 
   const rubyDefinition: BallDefinition = {
     position: {
-      x: window.innerWidth / 8 * Math.random(),
+      x: (window.innerWidth / 8 * Math.random()) + 3 ,
       y:  -1000 - amount * 10
     },
     radius: maxRadius,
@@ -79,15 +69,17 @@ export const spawnRandomBall = (
     radius: maxRadius,
   };
 
-  
-
-  const definition: BallDefinition = {
+  const pearlDefinition: BallDefinition = {
     position: {
-      x: (0.05 + Math.random() * 0.8) * window.innerWidth,
-      y:  -1000 - amount * 5
+      x: window.innerWidth * 0.55 + Math.random() * window.innerWidth * .10 ,
+      y:  -1000 - amount * 10
     },
     radius: maxRadius,
   };
+
+  if(house === 'pearl') {
+    return makeBall(world, RAPIER, pearlDefinition);
+  }
 
   if(house === 'sapphire') {
     return makeBall(world, RAPIER, sapphireDefinition);
@@ -100,6 +92,8 @@ export const spawnRandomBall = (
   if(house === 'amber') {
     return makeBall(world, RAPIER, amberDefinition);
   }
+
+
 
 
   // return makeBall(world, RAPIER, definition);
