@@ -7,19 +7,26 @@ import { initWallGraphics } from "./draw/wallGraphics";
 import { BallDefinition, spawnRandomBall } from "./physics/ballFactory";
 import { initEnvBallGraphics } from "./draw/envBallGraphics";
 import { RigidBody, Collider } from "@dimforge/rapier2d-compat";
-import { setupPlayer } from "./player";
+import { sapphireText, rubyText, amberText, pearlText, rubyCounter, amberCounter, pearlCounter, sapphireCounter } from "./draw/text";
+import { gsap } from "gsap";
+import { PixiPlugin } from "gsap/PixiPlugin";
 
-const BALL_COUNT = 0;
+gsap.registerPlugin(PixiPlugin);
+PixiPlugin.registerPIXI(PIXI);
+
+let gameStarted = false;
+
+
 let rubyBallsCreated = 0
 let amberBallsCreated = 0
 let pearlBallsCreated = 0
 let sapphireBallsCreated = 0
 
-let rubyMaxAmount = 4000
-let amberMaxAmount = 4000
-let pearlMaxAmount = 4000
-let sapphireMaxAmount = 4000
-let circleSize = 6
+let rubyMaxAmount = 3422
+let amberMaxAmount = 3394
+let pearlMaxAmount = 3135
+let sapphireMaxAmount = 3479
+let circleSize = 7.5
 
 let gameSpeed = 300
 
@@ -35,7 +42,89 @@ async function start() {
   container.addChild(wallGraphics);
   container.addChild(envBallGraphics);
 
+  //text graphics
+  //Sapphire
+  let sapphireTextObject = stage.addChild(sapphireText);
+  sapphireTextObject.x = window.innerWidth - window.innerWidth / 8;
+  sapphireTextObject.y = -100
+  sapphireTextObject.anchor.set(0.5,0.5)
+
+  let rubyCounterText = stage.addChild(rubyCounter);
+  rubyCounterText.x = window.innerWidth / 8;
+  rubyCounterText.y = window.innerHeight - 200
+  rubyCounterText.anchor.set(0.5,0.5)
+  rubyCounterText.alpha = 0
+
+  let amberCounterText = stage.addChild(amberCounter);
+  amberCounterText.x = window.innerWidth * (3/8);
+  amberCounterText.y = window.innerHeight - 200
+  amberCounterText.anchor.set(0.5,0.5)
+  amberCounterText.alpha = 0
+
+  let pearlCounterText = stage.addChild(pearlCounter);
+  pearlCounterText.x = window.innerWidth * (5/8);
+  pearlCounterText.y = window.innerHeight - 200
+  pearlCounterText.anchor.set(0.5,0.5)
+  pearlCounterText.alpha = 0
+  
+  
+
+  let sapphireCounterText = stage.addChild(sapphireCounter);
+  sapphireCounterText.x = window.innerWidth - window.innerWidth / 8;
+  sapphireCounterText.y = window.innerHeight - 200
+  sapphireCounterText.anchor.set(0.5,0.5)
+  sapphireCounterText.alpha = 0
+  
+
+  //Ruby
+  let rubyTextObject = stage.addChild(rubyText);
+  rubyTextObject.x = window.innerWidth / 8;
+  rubyTextObject.y = -200
+  rubyTextObject.anchor.set(0.5,0.5)
+
+  //Amber
+  let amberTextObject = stage.addChild(amberText);
+  amberTextObject.x = window.innerWidth * (3/8);
+  amberTextObject.y = -100
+  amberTextObject.anchor.set(0.5,0.5)
+
+  //Pearl
+  let pearlTextObject = stage.addChild(pearlText);
+  pearlTextObject.x = window.innerWidth * (5/8);
+  pearlTextObject.y = -100
+  pearlTextObject.anchor.set(0.5,0.5)
+
+  // animation timeline
+
+  gsap.to(sapphireCounterText, { pixi: { text: 3479, alpha: 1  }, duration: 40, snap: { text: 10 }, delay: 15,  });
+  gsap.to(rubyCounterText, { pixi: { text: 3422, alpha: 1  }, duration: 40, snap: { text: 10 }, delay: 15,  });
+  gsap.to(amberCounterText, { pixi: { text: 3394, alpha: 1  }, duration: 40, snap: { text: 10 }, delay: 15,  });
+  gsap.to(pearlCounterText, { pixi: { text: 3135, alpha: 1  }, duration: 40, snap: { text: 10 }, delay: 15,  });
+
+
+  const tl = gsap.timeline({ repeat: 0, });
+  
+  tl.to(rubyText, { pixi: { y: 100 }, duration: 1.5, ease: 'bounce' });
+  tl.to(amberText, { pixi: { y: 100 }, duration: 1.5, ease: 'bounce' });
+  tl.to(pearlText, { pixi: { y: 100 }, duration: 1.5, ease: 'bounce' });
+  tl.to(sapphireText, { pixi: { y:100 }, duration: 1.5, ease: 'bounce' });
+  tl.then(() => {
+    gameStarted = true;
+  })
+
+  const ltTwo = gsap.timeline({ repeat: 0, delay: 6 });
+
+  ltTwo.to(rubyText, { pixi: { alpha:0 }, duration: 3,  });
+  ltTwo.to(amberText, { pixi: { alpha:0 }, duration: 3, });
+  ltTwo.to(pearlText, { pixi: { alpha:0 }, duration: 3, });
+  ltTwo.to(sapphireText, { pixi: { alpha:0 }, duration: 3, });
+
+
+
+
+
   // physics setup
+  
   const physics = await initPhysics({ x: 0, y: 10 });
   const { RAPIER, step, world } = physics;
 
@@ -52,6 +141,10 @@ async function start() {
   //create pearl balls
 
   let pearlInterval = setInterval(() => {
+
+    if(!gameStarted) {
+      return;
+    }
 
     const bouncyBall = spawnRandomBall(world, RAPIER,circleSize,'pearl');
     pearlBallsCreated++;
@@ -109,6 +202,10 @@ async function start() {
 
   //create amber balls
   let amberInterval = setInterval(() => {
+
+    if(!gameStarted) {
+      return;
+    }
 
     const bouncyBall = spawnRandomBall(world, RAPIER,circleSize,'amber');
     amberBallsCreated++;
@@ -169,6 +266,10 @@ async function start() {
 
   // create ruby balls
   let rubyInterval = setInterval(() => {
+
+    if(!gameStarted) {
+      return;
+    }
 
     const bouncyBall = spawnRandomBall(world, RAPIER,circleSize,'ruby');
     rubyBallsCreated++;
@@ -232,6 +333,10 @@ async function start() {
   //create sapphire balls
   let sapphireInterval = setInterval(() => {
 
+    if(!gameStarted) {
+      return;
+    }
+
     const bouncyBall = spawnRandomBall(world, RAPIER,circleSize,'sapphire');
     sapphireBallsCreated++;
     if(sapphireBallsCreated >= sapphireMaxAmount) {
@@ -284,6 +389,7 @@ async function start() {
     envBalls.push(bouncyBallExtraExtraExtraLarge);
     
   }, gameSpeed)
+  
 
   app.ticker.add((delta) => {
     const d = delta * 0.1;
@@ -299,7 +405,10 @@ async function start() {
   });
 }
 
+
 start();
+
+
 
 export interface PhysicsObjectOptions {
   isStatic: boolean;

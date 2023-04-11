@@ -10,7 +10,14 @@ export class Renderer {
       height: window.innerHeight,
       backgroundColor: 0xffffff,
       resolution: 1,
-      antialias: true,
+      antialias: false,
+      autoDensity: false,
+      premultipliedAlpha: false,
+      backgroundAlpha: 0,
+      preserveDrawingBuffer: false,
+      forceCanvas: false,
+      powerPreference: "high-performance",
+      
       
     });
     // PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;

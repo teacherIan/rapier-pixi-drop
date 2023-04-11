@@ -1,6 +1,6 @@
 export const WALL = {
   fill: 0x000000,
-  alpha: 1,
+  alpha: .5,
   stroke: 0x00000,
   strokeWidth: 0,
 };
@@ -14,7 +14,7 @@ export const ENV_BALL = {
 
 export const SAPPHIRE_BALL = {
   fill: 0x1271b5,
-  alpha: 1,
+  alpha: 0.5,
   stroke: 0x00000,
   strokeWidth: 0,
 };

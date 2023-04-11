@@ -5,7 +5,7 @@ import { ENV_BALL } from "./_colorTheme";
 
 export const initEnvBallGraphics = () => {
   const envBallGraphics = new Graphics();
-
+  
   const drawEnvBalls = (
     balls: {
       body: RigidBody;
@@ -14,30 +14,8 @@ export const initEnvBallGraphics = () => {
       
     }[],color: string
   ) => {
-
-    let fillColor: number = 0x22ff22;
-
-    if(color === 'amber') {
-      fillColor = 0xffa500
-    }
-
-
-    if(color === 'ruby') {
-      fillColor = 0x9b1b30
-    }
-
-    if(color === 'sapphire') {
-      fillColor = 0x1271b5
-    }
-
-    
     envBallGraphics.clear();
-    envBallGraphics.beginFill(fillColor, ENV_BALL.alpha);
-    envBallGraphics.lineStyle({
-      alpha: ENV_BALL.alpha,
-      color: '#ff00ff',
-      width: ENV_BALL.strokeWidth,
-    });
+
     for (const ball of balls) {
       const { x, y } = ball.body.translation();
       if(x < window.innerWidth / 4) {

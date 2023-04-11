@@ -15,12 +15,15 @@ export const makeBall = (
     )
   );
 
+  
   // let num = Math.floor(Math.random() * 5)
   let colliderDesc = new RAPIER.ColliderDesc(new RAPIER.Ball(definition.radius))
     .setTranslation(0, 0)
     .setRestitution(0.5)
+    
 
   const collider = world.createCollider(colliderDesc, body);
+  
   
   
   setInterval(() => {
@@ -48,7 +51,7 @@ export const spawnRandomBall = (
   const sapphireDefinition: BallDefinition = {
     position: {
       x: (window.innerWidth - window.innerWidth / 5) + (0.05 + Math.random() * 0.8) * window.innerWidth / 5,
-      y:  -1000 - amount * 10
+      y:  -100 + Math.random() * 50
     },
     radius: maxRadius,
   };
@@ -56,15 +59,15 @@ export const spawnRandomBall = (
   const rubyDefinition: BallDefinition = {
     position: {
       x: (window.innerWidth / 5 * Math.random()) + 10 ,
-      y:  -1000 - amount * 10
+      y:  -100 + Math.random() * 50
     },
     radius: maxRadius,
   };
 
   const amberDefinition: BallDefinition = {
     position: {
-      x: (window.innerWidth / 4 + window.innerWidth / 10  * Math.random()),
-      y:  -1000 - amount * 10
+      x: (window.innerWidth / 4 + window.innerWidth / 5  * Math.random()) + 5,
+      y:  -100 + Math.random() * 50
     },
     radius: maxRadius,
   };
@@ -72,24 +75,28 @@ export const spawnRandomBall = (
   const pearlDefinition: BallDefinition = {
     position: {
       x: window.innerWidth * 0.55 + Math.random() * window.innerWidth * .10 ,
-      y:  -1000 - amount * 10
+      y:  -100 + Math.random() * 50
     },
     radius: maxRadius,
   };
 
   if(house === 'pearl') {
+    // amount++;
     return makeBall(world, RAPIER, pearlDefinition);
   }
 
   if(house === 'sapphire') {
+    // amount++;
     return makeBall(world, RAPIER, sapphireDefinition);
   }
 
   if(house === 'ruby') {
+    // amount++;
     return makeBall(world, RAPIER, rubyDefinition);
   }
 
   if(house === 'amber') {
+    // amount++
     return makeBall(world, RAPIER, amberDefinition);
   }
 
