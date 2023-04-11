@@ -96,10 +96,10 @@ async function start() {
 
   // animation timeline
 
-  gsap.to(sapphireCounterText, { pixi: { text: 3497, alpha: 1  }, duration: 30, snap: { text: 10 }, delay: 15,  });
-  gsap.to(rubyCounterText, { pixi: { text: 3436, alpha: 1  }, duration: 30, snap: { text: 10 }, delay: 15,  });
-  gsap.to(amberCounterText, { pixi: { text: 3403, alpha: 1  }, duration: 30, snap: { text: 10 }, delay: 15,  });
-  gsap.to(pearlCounterText, { pixi: { text: 3156, alpha: 1  }, duration: 30, snap: { text: 10 }, delay: 15,  });
+  gsap.to(sapphireCounterText, { pixi: { text: 3497, alpha: 1  }, duration: 30, snap: { text: 1 }, delay: 15,  });
+  gsap.to(rubyCounterText, { pixi: { text: 3436, alpha: 1  }, duration: 30, snap: { text: 1 }, delay: 15,  });
+  gsap.to(amberCounterText, { pixi: { text: 3403, alpha: 1  }, duration: 30, snap: { text: 1 }, delay: 15,  });
+  gsap.to(pearlCounterText, { pixi: { text: 3156, alpha: 1  }, duration: 30, snap: { text: 1 }, delay: 15,  });
 
 
   const tl = gsap.timeline({ repeat: 0, });
