@@ -9,7 +9,7 @@ const sapphireStyle = new PIXI.TextStyle({
     fontFamily: "\"Trebuchet MS\", Helvetica, sans-serif",
     fontStyle: "oblique",
     fontVariant: "small-caps",
-    fontSize: 75,
+    fontSize: 120,
     fontWeight: '900',
     letterSpacing: 0,
     padding: 46,
@@ -27,7 +27,7 @@ const rubyStyle = new PIXI.TextStyle({
         "#000000"
     ],
     fontFamily: "\"Times New Roman\", Times, serif",
-    fontSize: 75,
+    fontSize: 120,
     // fontStyle: "oblique",
     fontVariant: "small-caps",
     fontWeight: '800',
@@ -47,7 +47,7 @@ const amberStyle = new PIXI.TextStyle({
         "#000000"
     ],
     fontFamily: "\"Times New Roman\", Times, serif",
-    fontSize: 75,
+    fontSize: 120,
     // fontStyle: "oblique",
     fontVariant: "small-caps",
     fontWeight: '800',
@@ -67,7 +67,7 @@ const pearlStyle = new PIXI.TextStyle({
         "#000000"
     ],
     fontFamily: "\"Times New Roman\", Times, serif",
-    fontSize: 75,
+    fontSize: 120,
     // fontStyle: "oblique",
     fontVariant: "small-caps",
     fontWeight: '800',
