@@ -1,5 +1,7 @@
 import { Vector2 } from "@dimforge/rapier2d";
 import { getRapier } from "../rapier";
+import { gameStarted } from "../main";
+
 
 export type RAPIER =
   //@ts-ignore
@@ -15,7 +17,11 @@ export const initPhysics = async (gravity: Vector2) => {
     if (delta) {
       world.timestep = delta;
     }
-    world.step();
+
+    if(gameStarted) {
+      world.step();
+    }
+    
   };
 
   return { RAPIER, step, world };

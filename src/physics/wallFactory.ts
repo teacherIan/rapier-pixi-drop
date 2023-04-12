@@ -25,6 +25,7 @@ export const wallScreenArea = (
   world: World,
   RAPIER: RAPIER,
   thickness: number
+
 ) => {
   const walls = [];
 
@@ -85,18 +86,6 @@ export const wallScreenArea = (
         angle: 0,
       })
     );
-
-
-
-
-  // walls.push(
-  //   makeWall(world, RAPIER, {
-  //     angle: 0,
-  //     size: { y: thickness, x: window.innerWidth },
-
-  //     position: { x: window.innerWidth / 2, y: 0 },
-  //   })
-  // );
 
   return walls;
 };

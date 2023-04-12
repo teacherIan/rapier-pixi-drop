@@ -17,7 +17,7 @@ export const initWallGraphics = () => {
     wallGraphics.beginFill(WALL.fill, WALL.alpha);
     wallGraphics.lineStyle({
       alpha: 1,
-      color: 0x000000,
+      color: 0xffffff,
       width: WALL.strokeWidth,
     });
     for (const wall of walls) {

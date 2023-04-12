@@ -1,6 +1,6 @@
 export const WALL = {
   fill: 0x000000,
-  alpha: .5,
+  alpha: 1,
   stroke: 0x00000,
   strokeWidth: 0,
 };
