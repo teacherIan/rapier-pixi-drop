@@ -36,7 +36,9 @@ let amberMaxAmount = 0;
 let pearlMaxAmount = 0;
 let sapphireMaxAmount = 0;
 let circleSize = 7.5;
-let gameSpeed = 300;
+let gameSpeed = 400;
+
+let dropsFinished = 0;
 
 async function start() {
   // setup the renderer
@@ -136,25 +138,25 @@ async function start() {
     }, 5000);
 
     gsap.to(sapphireCounterText, {
-      pixi: { text: 3497, alpha: 1, scaleY: 2, scaleX: 1 },
+      pixi: { alpha: 1, scaleY: 2, scaleX: 1 },
       duration: 25,
       snap: { text: 1 },
       delay: 15,
     });
     gsap.to(rubyCounterText, {
-      pixi: { text: 3436, alpha: 1, scaleY: 2, scaleX: 1 },
+      pixi: { alpha: 1, scaleY: 2, scaleX: 1 },
       duration: 25,
       snap: { text: 1 },
       delay: 15,
     });
     gsap.to(amberCounterText, {
-      pixi: { text: 3403, alpha: 1, scaleY: 2, scaleX: 1 },
+      pixi: { alpha: 1, scaleY: 2, scaleX: 1 },
       duration: 25,
       snap: { text: 1 },
       delay: 15,
     });
     gsap.to(pearlCounterText, {
-      pixi: { text: 3156, alpha: 1, scaleY: 2, scaleX: 1 },
+      pixi: { alpha: 1, scaleY: 2, scaleX: 1 },
       duration: 25,
       snap: { text: 1 },
       delay: 15,
@@ -187,7 +189,7 @@ async function start() {
     definition: BallDefinition;
   }[] = [];
 
-  //create pearl balls
+  // add balls to the physics world
 
   function addBallToGameWorld(
     houseInput: string,
@@ -201,97 +203,78 @@ async function start() {
         localCircleSize = circleSize;
         break;
       case 2:
-        localCircleSize = 20;
+        localCircleSize = circleSize * 1.414;
+        break;
+      case 3:
+        localCircleSize = circleSize * 1.414 * 1.3;
+        break;
+      case 4:
+        localCircleSize = circleSize * 1.414 * 1.5;
+        break;
+      case 4:
+        localCircleSize = circleSize * 1.414 * 1.7;
+        break;
+      case 5:
+        localCircleSize = circleSize * 1.414 * 2;
     }
 
-    const bouncyBall = spawnRandomBall(world, RAPIER, circleSize, houseInput);
+    const bouncyBall = spawnRandomBall(
+      world,
+      RAPIER,
+      localCircleSize,
+      houseInput
+    );
+
+    bouncyBall.collider.setCollisionGroups(collisionGroup);
+    bouncyBall.collider.setRestitution(0.5);
+    bouncyBall.collider.setFriction(0.9);
     envBalls.push(bouncyBall);
   }
 
+  //create pearl balls
   let pearlInterval = setInterval(() => {
     if (!gameStarted) {
       return;
     }
+    //pearl collision group
+    let pearlCollisionGroup: number = 0b00000000000010000000000000001000;
+    let remainingPearlBalls = pearlMaxAmount - pearlBallsCreated;
 
-    const bouncyBall = spawnRandomBall(world, RAPIER, circleSize, 'pearl');
-    pearlBallsCreated++;
-    if (pearlBallsCreated >= pearlMaxAmount) {
+    if (remainingPearlBalls <= 0) {
+      dropsFinished++;
       clearInterval(pearlInterval);
       return;
     }
 
-    const bouncyBallLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414,
-      'pearl'
-    );
-    pearlBallsCreated += 2;
-    if (pearlBallsCreated >= pearlMaxAmount) {
-      clearInterval(pearlInterval);
-      return;
+    if (remainingPearlBalls >= 1) {
+      addBallToGameWorld('pearl', pearlCollisionGroup, 1);
+      pearlBallsCreated++;
+      remainingPearlBalls--;
     }
 
-    const bouncyBallExtraLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414 * 1.3,
-      'pearl'
-    );
-    pearlBallsCreated += 4;
-    if (pearlBallsCreated >= pearlMaxAmount) {
-      clearInterval(pearlInterval);
-      return;
+    if (remainingPearlBalls >= 2) {
+      addBallToGameWorld('pearl', pearlCollisionGroup, 2);
+      pearlBallsCreated += 2;
+      remainingPearlBalls -= 2;
     }
 
-    const bouncyBallExtraExtraLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414 * 1.5,
-      'pearl'
-    );
-    pearlBallsCreated += 8;
-    if (pearlBallsCreated >= pearlMaxAmount) {
-      clearInterval(pearlInterval);
-      return;
+    if (remainingPearlBalls >= 4) {
+      addBallToGameWorld('pearl', pearlCollisionGroup, 3);
+      pearlBallsCreated += 4;
+      remainingPearlBalls -= 4;
     }
 
-    const bouncyBallExtraExtraExtraLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414 * 1.7,
-      'pearl'
-    );
-    pearlBallsCreated += 16;
-    if (pearlBallsCreated >= pearlMaxAmount) {
-      clearInterval(pearlInterval);
-      return;
+    if (remainingPearlBalls >= 8) {
+      addBallToGameWorld('pearl', pearlCollisionGroup, 4);
+      pearlBallsCreated += 8;
+      remainingPearlBalls -= 8;
     }
 
-    bouncyBall?.collider.setRestitution(0.5);
-    bouncyBall?.collider.setCollisionGroups(0b00000000000010000000000000001000);
-    bouncyBallLarge?.collider.setRestitution(0.5);
-    bouncyBallLarge?.collider.setCollisionGroups(
-      0b00000000000010000000000000001000
-    );
-    bouncyBallExtraLarge?.collider.setRestitution(0.5);
-    bouncyBallExtraLarge?.collider.setCollisionGroups(
-      0b00000000000010000000000000001000
-    );
-    bouncyBallExtraExtraLarge?.collider.setRestitution(0.5);
-    bouncyBallExtraExtraLarge?.collider.setCollisionGroups(
-      0b00000000000010000000000000001000
-    );
-    bouncyBallExtraExtraExtraLarge?.collider.setRestitution(0.5);
-    bouncyBallExtraExtraExtraLarge?.collider.setCollisionGroups(
-      0b00000000000010000000000000001000
-    );
-
-    envBalls.push(bouncyBall);
-    envBalls.push(bouncyBallLarge);
-    envBalls.push(bouncyBallExtraLarge);
-    envBalls.push(bouncyBallExtraExtraLarge);
-    envBalls.push(bouncyBallExtraExtraExtraLarge);
+    if (remainingPearlBalls >= 16) {
+      addBallToGameWorld('pearl', pearlCollisionGroup, 5);
+      pearlBallsCreated += 16;
+      remainingPearlBalls -= 16;
+    }
   }, gameSpeed);
 
   //create amber balls
@@ -300,88 +283,45 @@ async function start() {
       return;
     }
 
-    const bouncyBall = spawnRandomBall(world, RAPIER, circleSize, 'amber');
-    amberBallsCreated++;
+    //amber collision group
+    let amberCollisionGroup: number = 0b00000000000001000000000000000100;
+    let remainingAmberBalls = amberMaxAmount - amberBallsCreated;
+
     if (amberBallsCreated >= amberMaxAmount) {
+      dropsFinished++;
       clearInterval(amberInterval);
       return;
     }
 
-    const bouncyBallLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414,
-      'amber'
-    );
-    amberBallsCreated += 2;
-    if (amberBallsCreated >= amberMaxAmount) {
-      clearInterval(amberInterval);
-      return;
+    if (remainingAmberBalls >= 1) {
+      addBallToGameWorld('amber', amberCollisionGroup, 1);
+      amberBallsCreated++;
+      remainingAmberBalls--;
     }
 
-    const bouncyBallExtraLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414 * 1.3,
-      'amber'
-    );
-    amberBallsCreated += 4;
-    if (amberBallsCreated >= amberMaxAmount) {
-      clearInterval(amberInterval);
-      return;
+    if (remainingAmberBalls >= 2) {
+      addBallToGameWorld('amber', amberCollisionGroup, 2);
+      amberBallsCreated += 2;
+      remainingAmberBalls -= 2;
     }
 
-    const bouncyBallExtraExtraLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414 * 1.5,
-      'amber'
-    );
-    amberBallsCreated += 8;
-    if (amberBallsCreated >= amberMaxAmount) {
-      clearInterval(amberInterval);
-      return;
+    if (remainingAmberBalls >= 4) {
+      addBallToGameWorld('amber', amberCollisionGroup, 3);
+      amberBallsCreated += 4;
+      remainingAmberBalls -= 4;
     }
 
-    const bouncyBallExtraExtraExtraLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414 * 1.7,
-      'amber'
-    );
-    amberBallsCreated += 16;
-    if (amberBallsCreated >= amberMaxAmount) {
-      clearInterval(amberInterval);
-      return;
+    if (remainingAmberBalls >= 8) {
+      addBallToGameWorld('amber', amberCollisionGroup, 4);
+      amberBallsCreated += 8;
+      remainingAmberBalls -= 8;
     }
 
-    bouncyBall?.collider.setRestitution(0.5);
-    bouncyBall?.collider.setCollisionGroups(0b00000000000001000000000000000100);
-    bouncyBall?.collider.setFriction(0.5);
-    bouncyBallLarge?.collider.setRestitution(0.5);
-    bouncyBallLarge?.collider.setCollisionGroups(
-      0b00000000000001000000000000000100
-    );
-    bouncyBallLarge?.collider.setFriction(0.5);
-    bouncyBallExtraLarge?.collider.setRestitution(0.5);
-    bouncyBallExtraLarge?.collider.setCollisionGroups(
-      0b00000000000001000000000000000100
-    );
-    bouncyBallExtraLarge?.collider.setFriction(0.5);
-    bouncyBallExtraExtraLarge?.collider.setRestitution(0.5);
-    bouncyBallExtraExtraLarge?.collider.setCollisionGroups(
-      0b00000000000001000000000000000100
-    );
-    bouncyBallExtraExtraLarge?.collider.setFriction(0.5);
-    bouncyBallExtraExtraExtraLarge?.collider.setRestitution(0.5);
-    bouncyBallExtraExtraExtraLarge?.collider.setCollisionGroups(
-      0b00000000000001000000000000000100
-    );
-    envBalls.push(bouncyBallLarge!);
-    envBalls.push(bouncyBall!);
-    envBalls.push(bouncyBallExtraLarge!);
-    envBalls.push(bouncyBallExtraExtraLarge!);
-    envBalls.push(bouncyBallExtraExtraExtraLarge!);
+    if (remainingAmberBalls >= 16) {
+      addBallToGameWorld('amber', amberCollisionGroup, 5);
+      amberBallsCreated += 16;
+      remainingAmberBalls -= 16;
+    }
   }, gameSpeed);
 
   // create ruby balls
@@ -390,88 +330,45 @@ async function start() {
       return;
     }
 
-    const bouncyBall = spawnRandomBall(world, RAPIER, circleSize, 'ruby');
-    rubyBallsCreated++;
-    if (sapphireBallsCreated >= rubyMaxAmount) {
-      clearInterval(rubyInterval);
-      return;
-    }
+    //ruby collision group
+    let rubyCollisionGroup: number = 0b00000000000000100000000000000010;
+    let remainingRubyBalls = rubyMaxAmount - rubyBallsCreated;
 
-    const bouncyBallLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414,
-      'ruby'
-    );
-    rubyBallsCreated += 2;
     if (rubyBallsCreated >= rubyMaxAmount) {
+      dropsFinished++;
       clearInterval(rubyInterval);
       return;
     }
 
-    const bouncyBallExtraLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414 * 1.3,
-      'ruby'
-    );
-    rubyBallsCreated += 4;
-    if (rubyBallsCreated >= rubyMaxAmount) {
-      clearInterval(rubyInterval);
-      return;
+    if (remainingRubyBalls >= 1) {
+      addBallToGameWorld('ruby', rubyCollisionGroup, 1);
+      rubyBallsCreated++;
+      remainingRubyBalls--;
     }
 
-    const bouncyBallExtraExtraLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414 * 1.5,
-      'ruby'
-    );
-    rubyBallsCreated += 8;
-    if (rubyBallsCreated >= rubyMaxAmount) {
-      clearInterval(rubyInterval);
-      return;
+    if (remainingRubyBalls >= 2) {
+      addBallToGameWorld('ruby', rubyCollisionGroup, 2);
+      rubyBallsCreated += 2;
+      remainingRubyBalls -= 2;
     }
 
-    const bouncyBallExtraExtraExtraLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414 * 1.7,
-      'ruby'
-    );
-    rubyBallsCreated += 16;
-    if (rubyBallsCreated >= rubyMaxAmount) {
-      clearInterval(rubyInterval);
-      return;
+    if (remainingRubyBalls >= 4) {
+      addBallToGameWorld('ruby', rubyCollisionGroup, 3);
+      rubyBallsCreated += 4;
+      remainingRubyBalls -= 4;
     }
 
-    bouncyBall?.collider.setRestitution(0.5);
-    bouncyBall?.collider.setCollisionGroups(0b00000000000000100000000000000010);
-    bouncyBall?.collider.setFriction(0.5);
-    bouncyBallLarge?.collider.setRestitution(0.5);
-    bouncyBallLarge?.collider.setCollisionGroups(
-      0b00000000000000100000000000000010
-    );
-    bouncyBallLarge?.collider.setFriction(0.5);
-    bouncyBallExtraLarge?.collider.setRestitution(0.5);
-    bouncyBallExtraLarge?.collider.setCollisionGroups(
-      0b00000000000000100000000000000010
-    );
-    bouncyBallExtraLarge?.collider.setFriction(0.5);
-    bouncyBallExtraExtraLarge?.collider.setRestitution(0.5);
-    bouncyBallExtraExtraLarge?.collider.setCollisionGroups(
-      0b00000000000000100000000000000010
-    );
-    bouncyBallExtraExtraLarge?.collider.setFriction(0.5);
-    bouncyBallExtraExtraExtraLarge?.collider.setRestitution(0.5);
-    bouncyBallExtraExtraExtraLarge?.collider.setCollisionGroups(
-      0b00000000000000100000000000000010
-    );
-    envBalls.push(bouncyBallLarge!);
-    envBalls.push(bouncyBall!);
-    envBalls.push(bouncyBallExtraLarge!);
-    envBalls.push(bouncyBallExtraExtraLarge!);
-    envBalls.push(bouncyBallExtraExtraExtraLarge!);
+    if (remainingRubyBalls >= 8) {
+      addBallToGameWorld('ruby', rubyCollisionGroup, 4);
+      rubyBallsCreated += 8;
+      remainingRubyBalls -= 8;
+    }
+
+    if (remainingRubyBalls >= 16) {
+      addBallToGameWorld('ruby', rubyCollisionGroup, 5);
+      rubyBallsCreated += 16;
+      remainingRubyBalls -= 16;
+    }
   }, gameSpeed);
 
   //create sapphire balls
@@ -480,94 +377,141 @@ async function start() {
       return;
     }
 
-    const bouncyBall = spawnRandomBall(world, RAPIER, circleSize, 'sapphire');
-    sapphireBallsCreated++;
+    //sapphire collision group
+    let sapphireCollisionGroup: number = 0b00000000000000010000000000000001;
+    let remainingSapphireBalls = sapphireMaxAmount - sapphireBallsCreated;
+
     if (sapphireBallsCreated >= sapphireMaxAmount) {
+      dropsFinished++;
       clearInterval(sapphireInterval);
       return;
     }
 
-    const bouncyBallLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414,
-      'sapphire'
-    );
-    sapphireBallsCreated += 2;
-    if (sapphireBallsCreated >= sapphireMaxAmount) {
-      clearInterval(sapphireInterval);
-      return;
+    if (remainingSapphireBalls >= 1) {
+      addBallToGameWorld('sapphire', sapphireCollisionGroup, 1);
+      sapphireBallsCreated++;
+      remainingSapphireBalls--;
     }
 
-    const bouncyBallExtraLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414 * 1.3,
-      'sapphire'
-    );
-    sapphireBallsCreated += 4;
-    if (sapphireBallsCreated >= sapphireMaxAmount) {
-      clearInterval(sapphireInterval);
-      return;
+    if (remainingSapphireBalls >= 2) {
+      addBallToGameWorld('sapphire', sapphireCollisionGroup, 2);
+      sapphireBallsCreated += 2;
+      remainingSapphireBalls -= 2;
     }
 
-    const bouncyBallExtraExtraLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414 * 1.5,
-      'sapphire'
-    );
-    sapphireBallsCreated += 8;
-    if (sapphireBallsCreated >= sapphireMaxAmount) {
-      clearInterval(sapphireInterval);
-      return;
+    if (remainingSapphireBalls >= 4) {
+      addBallToGameWorld('sapphire', sapphireCollisionGroup, 3);
+      sapphireBallsCreated += 4;
+      remainingSapphireBalls -= 4;
     }
 
-    const bouncyBallExtraExtraExtraLarge = spawnRandomBall(
-      world,
-      RAPIER,
-      circleSize * 1.414 * 1.7,
-      'sapphire'
-    );
-    sapphireBallsCreated += 16;
-    if (sapphireBallsCreated >= sapphireMaxAmount) {
-      clearInterval(sapphireInterval);
-      return;
+    if (remainingSapphireBalls >= 8) {
+      addBallToGameWorld('sapphire', sapphireCollisionGroup, 4);
+      sapphireBallsCreated += 8;
+      remainingSapphireBalls -= 8;
     }
 
-    bouncyBall.collider.setCollisionGroups(0b00000000000000010000000000000001);
-    bouncyBall.collider.setRestitution(0.5);
-    bouncyBallLarge.collider.setRestitution(0.5);
-    bouncyBallLarge.collider.setCollisionGroups(
-      0b00000000000000010000000000000001
-    );
-
-    bouncyBallExtraLarge.collider.setRestitution(0.5);
-    bouncyBallExtraLarge.collider.setCollisionGroups(
-      0b00000000000000010000000000000001
-    );
-    bouncyBallExtraExtraLarge.collider.setRestitution(0.5);
-    bouncyBallExtraExtraLarge.collider.setCollisionGroups(
-      0b00000000000000010000000000000001
-    );
-    bouncyBallExtraExtraExtraLarge.collider.setCollisionGroups(
-      0b00000000000000010000000000000001
-    );
-    envBalls.push(bouncyBallLarge);
-    envBalls.push(bouncyBall);
-    envBalls.push(bouncyBallExtraLarge);
-    envBalls.push(bouncyBallExtraExtraLarge);
-    envBalls.push(bouncyBallExtraExtraExtraLarge);
+    if (remainingSapphireBalls >= 16) {
+      addBallToGameWorld('sapphire', sapphireCollisionGroup, 5);
+      sapphireBallsCreated += 16;
+      remainingSapphireBalls -= 16;
+    }
   }, gameSpeed);
 
+  //confetti
+
+  let confettiContainer = new PIXI.Container();
+  app.stage.addChild(confettiContainer);
+
+  let characters = ['🥳', '🎉', '✨'];
+  let confettiAmount = 50;
+  let confetti = new Array(confettiAmount)
+    .fill(0)
+    .map((_, i) => {
+      return {
+        character: characters[i % characters.length],
+        x: Math.random() * 100,
+        y: -20 - Math.random() * 100,
+        r: 0.1 + Math.random() * 10,
+      };
+    })
+    .sort((a, b) => a.r - b.r);
+
+  for (let i = 0; i < confettiAmount; i++) {
+    const counterStyle = new PIXI.TextStyle({
+      fontSize: confetti[i].r * 10,
+    });
+
+    const confettiIcon = new PIXI.Text(confetti[i].character, counterStyle);
+    confettiIcon.x = confetti[i].x;
+    confettiIcon.y = 500;
+    confettiIcon.zIndex = confetti[i].r;
+
+    confettiContainer.addChild(confettiIcon);
+    // app.stage.addChild(confettiIcon);
+  }
+
+  console.log(app.stage);
+
+  // let confetti = new Array(50)
+  //   .fill(0)
+  //   .map((_, i) => {
+  //     return {
+  //       character: characters[i % characters.length],
+  //       x: Math.random() * 100,
+  //       y: -20 - Math.random() * 100,
+  //       r: 0.1 + Math.random() * 1,
+  //     };
+  //   })
+  //   .sort((a, b) => a.r - b.r);
+
+  // let items = [];
+  // confetti.forEach((item, index) => {
+  //   let divItem = document.createElement('div');
+  //   divItem.classList.add('confetti');
+  //   divItem.style.left = item.x + '%';
+  //   divItem.style.top = item.y + '%';
+  //   divItem.style.transform = `scale(${item.r})`;
+  //   divItem.innerHTML = item.character;
+  //   container.appendChild(divItem);
+  //   items.push(divItem);
+  // });
+
+  // function loop() {
+  //   requestAnimationFrame(loop);
+  //   if (dropsFinished == 4) {
+  //     setTimeout(() => {
+  //       confetti = confetti.map((emoji) => {
+  //         emoji.y += 0.7 * emoji.r;
+  //         if (emoji.y > 120) emoji.y = -20;
+  //         return emoji;
+  //       });
+
+  //       items.forEach((divItem, index) => {
+  //         divItem.style.left = confetti[index].x + '%';
+  //         divItem.style.top = confetti[index].y + '%';
+  //         divItem.style.transform = `scale(${confetti[index].r})`;
+  //       });
+  //     }, 3000);
+  //   }
+  // }
+
   app.ticker.add((delta) => {
+    amberCounterText.text = amberBallsCreated.toString();
+    rubyCounterText.text = rubyBallsCreated.toString();
+    sapphireCounterText.text = sapphireBallsCreated.toString();
+    pearlCounterText.text = pearlBallsCreated.toString();
+
+    confettiContainer.children.forEach((confettiIcon) => {
+      confettiIcon.y += 0.7;
+      if (confettiIcon.y > window.innerHeight) confettiIcon.y = -20;
+    });
+
     const d = delta * 0.1;
 
     drawWalls(walls);
-    // drawEnvBalls(envBalls,'sapphire');
 
-    drawEnvBalls(envBalls, 'ruby');
-    // drawEnvBalls(sapphireBalls,'sapphire');
+    drawEnvBalls(envBalls);
 
     step(d); // step physics
     app.render(); // pixi render
