@@ -24,7 +24,24 @@ import { buttonContainer } from './draw/button';
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
 
+import { floatContainer } from './draw/float';
+
+import music from '/music/space-120280.mp3';
+
+let audio = new Audio(music);
+
+//current numbers
+/*
+let finalRubyMaxAmount = 3422;
+let finalAmberMaxAmount = 3394;
+let finalPearlMaxAmount = 3135;
+let finalSapphireMaxAmount = 3479;
+
+*/
+
+export let startWallAnimation = false;
 export let gameStarted = false;
+export let stopSimulation = false;
 
 let rubyBallsCreated = 0;
 let amberBallsCreated = 0;
@@ -35,8 +52,63 @@ let rubyMaxAmount = 0;
 let amberMaxAmount = 0;
 let pearlMaxAmount = 0;
 let sapphireMaxAmount = 0;
-let circleSize = 7.5;
+
+// final ball amount
+
+let finalRubyMaxAmount = 3422;
+let finalAmberMaxAmount = 3394;
+let finalPearlMaxAmount = 3135;
+let finalSapphireMaxAmount = 3479;
+
+let total =
+  finalRubyMaxAmount +
+  finalAmberMaxAmount +
+  finalPearlMaxAmount +
+  finalSapphireMaxAmount;
+console.log(total);
+
+//setup game speed and ball size based on amount of total
+
 let gameSpeed = 400;
+let circleSize = 7.5;
+let gameSize = 0;
+let confettiDropAmount = 50;
+
+if (total < 500) {
+  gameSpeed = 400;
+  circleSize = 30;
+  gameSize = 2;
+  confettiDropAmount = 200;
+} else if (total > 500 && total < 1000) {
+  gameSpeed = 400;
+  circleSize = 20;
+  gameSize = 2;
+  confettiDropAmount = 200;
+} else if (total > 1000 && total < 2000) {
+  gameSpeed = 400;
+  circleSize = 14;
+  gameSize = 3;
+  confettiDropAmount = 200;
+} else if (total > 2000 && total < 5000) {
+  gameSpeed = 400;
+  circleSize = 10;
+  gameSize = 4;
+  confettiDropAmount = 170;
+} else if (total > 5000 && total < 10000) {
+  gameSpeed = 400;
+  circleSize = 8;
+  gameSize = 4;
+  confettiDropAmount = 100;
+  console.log('game size 5');
+} else if (total > 10000 && total < 15000) {
+  gameSpeed = 300;
+  circleSize = 7.5;
+  gameSize = 5;
+} else {
+  gameSpeed = 300;
+  circleSize = 6;
+  gameSize = 6;
+}
 
 let dropsFinished = 0;
 
@@ -46,6 +118,7 @@ async function start() {
 
   const container = new PIXI.Container();
   stage.addChild(container);
+  let floatContainerVar = stage.addChild(floatContainer);
 
   // individual graphics for balls
 
@@ -116,8 +189,20 @@ async function start() {
   let { wallGraphics, drawWalls } = initWallGraphics();
 
   // starts visual off button press
-  buttonContainerObject.on('pointerdown', () => {
+
+  document.body.addEventListener('keydown', () => {
+    audio.play();
+    startWallAnimation = true;
     document.body.requestFullscreen();
+
+    gsap
+      .to(floatContainerVar, {
+        pixi: { alpha: 0 },
+        duration: 5,
+      })
+      .then(() => {
+        floatContainerVar.destroy();
+      });
 
     setTimeout(() => {
       // add walls to the physics world after window is fullscreen and updated
@@ -135,46 +220,40 @@ async function start() {
       amberMaxAmount = 3394;
       pearlMaxAmount = 3135;
       sapphireMaxAmount = 3479;
-    }, 5000);
+    }, 15000);
 
     gsap.to(sapphireCounterText, {
       pixi: { alpha: 1, scaleY: 2, scaleX: 1 },
       duration: 25,
-      snap: { text: 1 },
-      delay: 15,
+      delay: 25,
     });
     gsap.to(rubyCounterText, {
       pixi: { alpha: 1, scaleY: 2, scaleX: 1 },
       duration: 25,
-      snap: { text: 1 },
-      delay: 15,
+      delay: 25,
     });
     gsap.to(amberCounterText, {
       pixi: { alpha: 1, scaleY: 2, scaleX: 1 },
       duration: 25,
-      snap: { text: 1 },
-      delay: 15,
+      delay: 25,
     });
     gsap.to(pearlCounterText, {
       pixi: { alpha: 1, scaleY: 2, scaleX: 1 },
       duration: 25,
-      snap: { text: 1 },
-      delay: 15,
+      delay: 25,
     });
 
-    const tl = gsap.timeline({ repeat: 0 });
+    const tl = gsap.timeline({ repeat: 0, delay: 6 });
 
     tl.to(rubyText, { pixi: { y: 100 }, duration: 1.5, ease: 'bounce' });
     tl.to(amberText, { pixi: { y: 100 }, duration: 1.5, ease: 'bounce' });
     tl.to(pearlText, { pixi: { y: 100 }, duration: 1.5, ease: 'bounce' });
     tl.to(sapphireText, { pixi: { y: 100 }, duration: 1.5, ease: 'bounce' });
 
-    const ltTwo = gsap.timeline({ repeat: 0, delay: 6 });
-
-    ltTwo.to(rubyText, { pixi: { alpha: 0 }, duration: 3 });
-    ltTwo.to(amberText, { pixi: { alpha: 0 }, duration: 3 });
-    ltTwo.to(pearlText, { pixi: { alpha: 0 }, duration: 3 });
-    ltTwo.to(sapphireText, { pixi: { alpha: 0 }, duration: 3 });
+    tl.to(rubyText, { pixi: { alpha: 0 }, duration: 3 });
+    tl.to(amberText, { pixi: { alpha: 0 }, duration: 3 });
+    tl.to(pearlText, { pixi: { alpha: 0 }, duration: 3 });
+    tl.to(sapphireText, { pixi: { alpha: 0 }, duration: 3 });
   });
 
   // physics setup
@@ -211,10 +290,10 @@ async function start() {
       case 4:
         localCircleSize = circleSize * 1.414 * 1.5;
         break;
-      case 4:
+      case 5:
         localCircleSize = circleSize * 1.414 * 1.7;
         break;
-      case 5:
+      case 6:
         localCircleSize = circleSize * 1.414 * 2;
     }
 
@@ -252,25 +331,25 @@ async function start() {
       remainingPearlBalls--;
     }
 
-    if (remainingPearlBalls >= 2) {
+    if (remainingPearlBalls >= 2 && gameSize > 1) {
       addBallToGameWorld('pearl', pearlCollisionGroup, 2);
       pearlBallsCreated += 2;
       remainingPearlBalls -= 2;
     }
 
-    if (remainingPearlBalls >= 4) {
+    if (remainingPearlBalls >= 4 && gameSize > 2) {
       addBallToGameWorld('pearl', pearlCollisionGroup, 3);
       pearlBallsCreated += 4;
       remainingPearlBalls -= 4;
     }
 
-    if (remainingPearlBalls >= 8) {
+    if (remainingPearlBalls >= 8 && gameSize > 3) {
       addBallToGameWorld('pearl', pearlCollisionGroup, 4);
       pearlBallsCreated += 8;
       remainingPearlBalls -= 8;
     }
 
-    if (remainingPearlBalls >= 16) {
+    if (remainingPearlBalls >= 16 && gameSize > 4) {
       addBallToGameWorld('pearl', pearlCollisionGroup, 5);
       pearlBallsCreated += 16;
       remainingPearlBalls -= 16;
@@ -299,25 +378,25 @@ async function start() {
       remainingAmberBalls--;
     }
 
-    if (remainingAmberBalls >= 2) {
+    if (remainingAmberBalls >= 2 && gameSize > 1) {
       addBallToGameWorld('amber', amberCollisionGroup, 2);
       amberBallsCreated += 2;
       remainingAmberBalls -= 2;
     }
 
-    if (remainingAmberBalls >= 4) {
+    if (remainingAmberBalls >= 4 && gameSize > 2) {
       addBallToGameWorld('amber', amberCollisionGroup, 3);
       amberBallsCreated += 4;
       remainingAmberBalls -= 4;
     }
 
-    if (remainingAmberBalls >= 8) {
+    if (remainingAmberBalls >= 8 && gameSize > 3) {
       addBallToGameWorld('amber', amberCollisionGroup, 4);
       amberBallsCreated += 8;
       remainingAmberBalls -= 8;
     }
 
-    if (remainingAmberBalls >= 16) {
+    if (remainingAmberBalls >= 16 && gameSize > 4) {
       addBallToGameWorld('amber', amberCollisionGroup, 5);
       amberBallsCreated += 16;
       remainingAmberBalls -= 16;
@@ -346,25 +425,25 @@ async function start() {
       remainingRubyBalls--;
     }
 
-    if (remainingRubyBalls >= 2) {
+    if (remainingRubyBalls >= 2 && gameSize > 1) {
       addBallToGameWorld('ruby', rubyCollisionGroup, 2);
       rubyBallsCreated += 2;
       remainingRubyBalls -= 2;
     }
 
-    if (remainingRubyBalls >= 4) {
+    if (remainingRubyBalls >= 4 && gameSize > 2) {
       addBallToGameWorld('ruby', rubyCollisionGroup, 3);
       rubyBallsCreated += 4;
       remainingRubyBalls -= 4;
     }
 
-    if (remainingRubyBalls >= 8) {
+    if (remainingRubyBalls >= 8 && gameSize > 3) {
       addBallToGameWorld('ruby', rubyCollisionGroup, 4);
       rubyBallsCreated += 8;
       remainingRubyBalls -= 8;
     }
 
-    if (remainingRubyBalls >= 16) {
+    if (remainingRubyBalls >= 16 && gameSize > 4) {
       addBallToGameWorld('ruby', rubyCollisionGroup, 5);
       rubyBallsCreated += 16;
       remainingRubyBalls -= 16;
@@ -393,25 +472,25 @@ async function start() {
       remainingSapphireBalls--;
     }
 
-    if (remainingSapphireBalls >= 2) {
+    if (remainingSapphireBalls >= 2 && gameSize > 1) {
       addBallToGameWorld('sapphire', sapphireCollisionGroup, 2);
       sapphireBallsCreated += 2;
       remainingSapphireBalls -= 2;
     }
 
-    if (remainingSapphireBalls >= 4) {
+    if (remainingSapphireBalls >= 4 && gameSize > 2) {
       addBallToGameWorld('sapphire', sapphireCollisionGroup, 3);
       sapphireBallsCreated += 4;
       remainingSapphireBalls -= 4;
     }
 
-    if (remainingSapphireBalls >= 8) {
+    if (remainingSapphireBalls >= 8 && gameSize > 3) {
       addBallToGameWorld('sapphire', sapphireCollisionGroup, 4);
       sapphireBallsCreated += 8;
       remainingSapphireBalls -= 8;
     }
 
-    if (remainingSapphireBalls >= 16) {
+    if (remainingSapphireBalls >= 16 && gameSize > 4) {
       addBallToGameWorld('sapphire', sapphireCollisionGroup, 5);
       sapphireBallsCreated += 16;
       remainingSapphireBalls -= 16;
@@ -424,14 +503,14 @@ async function start() {
   app.stage.addChild(confettiContainer);
 
   let characters = ['🥳', '🎉', '✨'];
-  let confettiAmount = 50;
+  let confettiAmount = confettiDropAmount;
   let confetti = new Array(confettiAmount)
-    .fill(0)
+    .fill(null)
     .map((_, i) => {
       return {
         character: characters[i % characters.length],
-        x: Math.random() * 100,
-        y: -20 - Math.random() * 100,
+        x: Math.random() * window.innerWidth,
+        y: -200 - Math.random() * 1000,
         r: 0.1 + Math.random() * 10,
       };
     })
@@ -444,57 +523,12 @@ async function start() {
 
     const confettiIcon = new PIXI.Text(confetti[i].character, counterStyle);
     confettiIcon.x = confetti[i].x;
-    confettiIcon.y = 500;
+    confettiIcon.y = confetti[i].y;
     confettiIcon.zIndex = confetti[i].r;
 
     confettiContainer.addChild(confettiIcon);
     // app.stage.addChild(confettiIcon);
   }
-
-  console.log(app.stage);
-
-  // let confetti = new Array(50)
-  //   .fill(0)
-  //   .map((_, i) => {
-  //     return {
-  //       character: characters[i % characters.length],
-  //       x: Math.random() * 100,
-  //       y: -20 - Math.random() * 100,
-  //       r: 0.1 + Math.random() * 1,
-  //     };
-  //   })
-  //   .sort((a, b) => a.r - b.r);
-
-  // let items = [];
-  // confetti.forEach((item, index) => {
-  //   let divItem = document.createElement('div');
-  //   divItem.classList.add('confetti');
-  //   divItem.style.left = item.x + '%';
-  //   divItem.style.top = item.y + '%';
-  //   divItem.style.transform = `scale(${item.r})`;
-  //   divItem.innerHTML = item.character;
-  //   container.appendChild(divItem);
-  //   items.push(divItem);
-  // });
-
-  // function loop() {
-  //   requestAnimationFrame(loop);
-  //   if (dropsFinished == 4) {
-  //     setTimeout(() => {
-  //       confetti = confetti.map((emoji) => {
-  //         emoji.y += 0.7 * emoji.r;
-  //         if (emoji.y > 120) emoji.y = -20;
-  //         return emoji;
-  //       });
-
-  //       items.forEach((divItem, index) => {
-  //         divItem.style.left = confetti[index].x + '%';
-  //         divItem.style.top = confetti[index].y + '%';
-  //         divItem.style.transform = `scale(${confetti[index].r})`;
-  //       });
-  //     }, 3000);
-  //   }
-  // }
 
   app.ticker.add((delta) => {
     amberCounterText.text = amberBallsCreated.toString();
@@ -502,10 +536,17 @@ async function start() {
     sapphireCounterText.text = sapphireBallsCreated.toString();
     pearlCounterText.text = pearlBallsCreated.toString();
 
-    confettiContainer.children.forEach((confettiIcon) => {
-      confettiIcon.y += 0.7;
-      if (confettiIcon.y > window.innerHeight) confettiIcon.y = -20;
-    });
+    if (dropsFinished == 4) {
+      stopSimulation = true;
+      envBalls.forEach((ball) => {
+        ball.definition.radius += 0.01;
+      });
+
+      confettiContainer.children.forEach((confettiIcon) => {
+        confettiIcon.y += 0.1 * confettiIcon.zIndex * delta;
+        if (confettiIcon.y > window.innerHeight) confettiIcon.y = -100;
+      });
+    }
 
     const d = delta * 0.1;
 
