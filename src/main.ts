@@ -21,6 +21,16 @@ import { gsap } from 'gsap';
 import { PixiPlugin } from 'gsap/PixiPlugin';
 import { buttonContainer, headerTimeLine } from './draw/startHeadings';
 
+//db
+import { db } from './db/db';
+
+import { collection, getDocs } from 'firebase/firestore';
+
+const querySnapshot = await getDocs(collection(db, 'points'));
+querySnapshot.forEach((doc) => {
+  console.log(`${doc.id} => ${doc.data()}`);
+});
+
 //register plugins
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
