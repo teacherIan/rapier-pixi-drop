@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 export let floatContainer = new PIXI.Container();
 floatContainer.width = window.innerWidth;
 
-let particleCount = 1000;
+let particleCount = 250;
 let particleColors = [
   '26a3ff',
   '13ce66',
@@ -18,11 +18,11 @@ let particleSettings;
 
 for (let i = 0; i < particleCount; i++) {
   particleSettings = {
-    particleSize: 10,
+    particleSize: 70,
     x: Math.floor(Math.random() * window.innerWidth),
     y: Math.floor(Math.random() * window.innerHeight),
-    scale: Math.floor(Math.random() * 3) / 3,
-    alpha: Math.random(),
+    scale: Math.floor(Math.random() * 5) / 3,
+    alpha: Math.random() / 2,
     particleSpeed: Math.floor(Math.min(200, Math.random() * 10000)),
     color: particleColors[Math.floor(Math.random() * particleColors.length)],
   };
@@ -37,6 +37,8 @@ function createParticle(particleSettings) {
   graphic.endFill();
   graphic.x = Math.random() * window.innerWidth * 2 - window.innerWidth / 2;
   graphic.y = Math.random() * window.innerHeight * 2 - window.innerHeight / 2;
+  // graphic.scale = particleSettings.scale;
+  // graphic.alpha = particleSettings.scale;
 
   // SET POSITIONING
   gsap.to(graphic, {
@@ -46,6 +48,7 @@ function createParticle(particleSettings) {
       scale: particleSettings.scale,
       alpha: particleSettings.alpha,
     },
+    duration: 20,
   });
   gsap.to(graphic, {
     pixi: {

@@ -19,7 +19,8 @@ import {
 } from './draw/text';
 import { gsap } from 'gsap';
 import { PixiPlugin } from 'gsap/PixiPlugin';
-import { buttonContainer } from './draw/button';
+import { buttonContainer, headerTimeLine } from './draw/startHeadings';
+
 //register plugins
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
@@ -131,28 +132,28 @@ async function start() {
 
   let rubyCounterText = stage.addChild(rubyCounter);
   rubyCounterText.x = window.innerWidth / 8;
-  rubyCounterText.y = window.innerHeight - 200;
+  rubyCounterText.y = window.innerHeight - 150;
   rubyCounterText.anchor.set(0.5, 0.5);
   rubyCounterText.alpha = 0;
   rubyCounterText.scale.set(0);
 
   let amberCounterText = stage.addChild(amberCounter);
   amberCounterText.x = window.innerWidth * (3 / 8);
-  amberCounterText.y = window.innerHeight - 200;
+  amberCounterText.y = window.innerHeight - 150;
   amberCounterText.anchor.set(0.5, 0.5);
   amberCounterText.alpha = 0;
   amberCounterText.scale.set(0);
 
   let pearlCounterText = stage.addChild(pearlCounter);
   pearlCounterText.x = window.innerWidth * (5 / 8);
-  pearlCounterText.y = window.innerHeight - 200;
+  pearlCounterText.y = window.innerHeight - 150;
   pearlCounterText.anchor.set(0.5, 0.5);
   pearlCounterText.alpha = 0;
   pearlCounterText.scale.set(0);
 
   let sapphireCounterText = stage.addChild(sapphireCounter);
   sapphireCounterText.x = window.innerWidth - window.innerWidth / 8;
-  sapphireCounterText.y = window.innerHeight - 200;
+  sapphireCounterText.y = window.innerHeight - 150;
   sapphireCounterText.anchor.set(0.5, 0.5);
   sapphireCounterText.alpha = 0;
   sapphireCounterText.scale.set(0);
@@ -166,7 +167,7 @@ async function start() {
   //Ruby
   let rubyTextObject = stage.addChild(rubyText);
   rubyTextObject.x = window.innerWidth / 8;
-  rubyTextObject.y = -200;
+  rubyTextObject.y = -100;
   rubyTextObject.anchor.set(0.5, 0.5);
 
   //Amber
@@ -191,6 +192,7 @@ async function start() {
   // starts visual off button press
 
   document.body.addEventListener('keydown', () => {
+    headerTimeLine.kill();
     audio.play();
     startWallAnimation = true;
     document.body.requestFullscreen();
@@ -198,7 +200,7 @@ async function start() {
     gsap
       .to(floatContainerVar, {
         pixi: { alpha: 0 },
-        duration: 5,
+        duration: 7,
       })
       .then(() => {
         floatContainerVar.destroy();
@@ -220,7 +222,7 @@ async function start() {
       amberMaxAmount = 3394;
       pearlMaxAmount = 3135;
       sapphireMaxAmount = 3479;
-    }, 15000);
+    }, 16500);
 
     gsap.to(sapphireCounterText, {
       pixi: { alpha: 1, scaleY: 2, scaleX: 1 },
@@ -243,7 +245,7 @@ async function start() {
       delay: 25,
     });
 
-    const tl = gsap.timeline({ repeat: 0, delay: 6 });
+    const tl = gsap.timeline({ repeat: 0, delay: 7.5 });
 
     tl.to(rubyText, { pixi: { y: 100 }, duration: 1.5, ease: 'bounce' });
     tl.to(amberText, { pixi: { y: 100 }, duration: 1.5, ease: 'bounce' });
@@ -254,6 +256,14 @@ async function start() {
     tl.to(amberText, { pixi: { alpha: 0 }, duration: 3 });
     tl.to(pearlText, { pixi: { alpha: 0 }, duration: 3 });
     tl.to(sapphireText, { pixi: { alpha: 0 }, duration: 3 });
+    tl.then(() => {
+      console.log('TL Finished');
+      // tl.kill();
+      // rubyText.destroy();
+      // amberText.destroy();
+      // pearlText.destroy();
+      // sapphireText.destroy();
+    });
   });
 
   // physics setup
