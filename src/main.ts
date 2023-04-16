@@ -32,28 +32,24 @@ let pearlMaxAmountDB = 0;
 let sapphireMaxAmountDB = 0;
 let loaded = false;
 
-const querySnapshot = await getDocs(collection(db, 'points'));
-querySnapshot.forEach((doc) => {
-  loaded = true;
+async function getData() {
+  const querySnapshot = await getDocs(collection(db, 'points'));
+  querySnapshot.forEach((doc) => {
+    loaded = true;
 
-  if (doc.data().house === 'Ruby') {
-    rubyMaxAmountDB += parseInt(doc.data().points);
-  } else if (doc.data().house === 'Amber') {
-    amberMaxAmountDB += parseInt(doc.data().points);
-  } else if (doc.data().house === 'Pearl') {
-    pearlMaxAmountDB += parseInt(doc.data().points);
-  } else if (doc.data().house === 'Sapphire') {
-    sapphireMaxAmountDB += parseInt(doc.data().points);
-  }
+    if (doc.data().house === 'Ruby') {
+      rubyMaxAmountDB += parseInt(doc.data().points);
+    } else if (doc.data().house === 'Amber') {
+      amberMaxAmountDB += parseInt(doc.data().points);
+    } else if (doc.data().house === 'Pearl') {
+      pearlMaxAmountDB += parseInt(doc.data().points);
+    } else if (doc.data().house === 'Sapphire') {
+      sapphireMaxAmountDB += parseInt(doc.data().points);
+    }
+  });
+}
 
-  // console.log(`${doc.id} => ${doc.data().house}`);
-  console.log(
-    rubyMaxAmountDB,
-    amberMaxAmountDB,
-    pearlMaxAmountDB,
-    sapphireMaxAmountDB + 'DB INFO'
-  );
-});
+getData();
 
 //register plugins
 gsap.registerPlugin(PixiPlugin);
