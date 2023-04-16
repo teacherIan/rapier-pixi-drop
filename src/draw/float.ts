@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 
 export let floatContainer = new PIXI.Container();
 floatContainer.width = window.innerWidth;
+// let renderer = new PIXI.Renderer();
 
 let particleCount = 250;
 let particleColors = [
@@ -37,8 +38,14 @@ function createParticle(particleSettings) {
   graphic.endFill();
   graphic.x = Math.random() * window.innerWidth * 2 - window.innerWidth / 2;
   graphic.y = Math.random() * window.innerHeight * 2 - window.innerHeight / 2;
-  // graphic.scale = particleSettings.scale;
-  // graphic.alpha = particleSettings.scale;
+
+  // let texture = PIXI.renderer.generateTexture(graphic);
+  // let texture = PIXI.Renderer.generateTexture(graphic);
+
+  //attempt to turn graphic into sprite
+
+  // let texture = renderer.generateTexture(graphic);
+  // let sprite = new PIXI.Sprite(texture);
 
   // SET POSITIONING
   gsap.to(graphic, {
@@ -62,6 +69,7 @@ function createParticle(particleSettings) {
     },
   });
 
+  //use graphic instead of sprite if this does not work
   floatContainer.addChild(graphic);
 
   // app.stage.addChild(particleSprite);
