@@ -577,19 +577,9 @@ async function start() {
     confettiIconSprite.y = confetti[i].y;
     confettiIconSprite.zIndex = confetti[i].r;
     confettiIconSprite.scale.set(confetti[i].r);
-
-    // const counterStyle = new PIXI.TextStyle({
-    //   fontSize: confetti[i].r * 10,
-    // });
-
-    // const confettiIcon = new PIXI.Text(confetti[i].character, counterStyle);
-    // confettiIcon.x = confetti[i].x;
-    // confettiIcon.y = confetti[i].y;
-    // confettiIcon.zIndex = confetti[i].r;
+    confettiIconSprite.cullable = true;
 
     confettiContainer.addChild(confettiIconSprite);
-    // confettiContainer.addChild(confettiIcon);
-    // app.stage.addChild(confettiIcon);
   }
 
   app.ticker.add((delta) => {

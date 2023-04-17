@@ -38,6 +38,7 @@ function createParticle(particleSettings) {
   graphic.endFill();
   graphic.x = Math.random() * window.innerWidth * 2 - window.innerWidth / 2;
   graphic.y = Math.random() * window.innerHeight * 2 - window.innerHeight / 2;
+  graphic.cullable = true;
 
   // let texture = PIXI.renderer.generateTexture(graphic);
   // let texture = PIXI.Renderer.generateTexture(graphic);

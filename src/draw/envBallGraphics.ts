@@ -31,6 +31,7 @@ export const initEnvBallGraphics = () => {
       envBallGraphics.drawCircle(x, y, radius);
     }
     envBallGraphics.endFill();
+    envBallGraphics.cullable = true;
   };
 
   return { envBallGraphics, drawEnvBalls };
