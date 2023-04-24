@@ -36,6 +36,7 @@ let amberMaxAmountDB = 0;
 let pearlMaxAmountDB = 0;
 let sapphireMaxAmountDB = 0;
 let loaded = false;
+let total = 0;
 
 async function getData() {
   const querySnapshot = await getDocs(collection(db, 'points'));
@@ -52,10 +53,51 @@ async function getData() {
     } else if (doc.data().house === 'Sapphire') {
       sapphireMaxAmountDB += parseInt(doc.data().points);
     }
+    total += parseInt(doc.data().points);
   });
 }
 
-getData();
+let gameSpeed = 400;
+let circleSize = 7.5;
+let gameSize = 0;
+let confettiDropAmount = 200;
+
+getData().then(() => {
+  if (total < 500) {
+    gameSpeed = 400;
+    circleSize = 30;
+    gameSize = 2;
+    confettiDropAmount = 200;
+  } else if (total > 500 && total < 1000) {
+    gameSpeed = 400;
+    circleSize = 20;
+    gameSize = 2;
+    confettiDropAmount = 200;
+  } else if (total > 1000 && total < 2000) {
+    gameSpeed = 400;
+    circleSize = 14;
+    gameSize = 3;
+    confettiDropAmount = 200;
+  } else if (total > 2000 && total < 5000) {
+    gameSpeed = 400;
+    circleSize = 10;
+    gameSize = 4;
+    confettiDropAmount = 200;
+  } else if (total > 5000 && total < 10000) {
+    gameSpeed = 400;
+    circleSize = 8;
+    gameSize = 4;
+    confettiDropAmount = 200;
+  } else if (total > 10000 && total < 15000) {
+    gameSpeed = 300;
+    circleSize = 7.5;
+    gameSize = 5;
+  } else {
+    gameSpeed = 300;
+    circleSize = 6;
+    gameSize = 6;
+  }
+});
 
 //register plugins
 gsap.registerPlugin(PixiPlugin);
@@ -66,15 +108,6 @@ import { floatContainer } from './draw/float';
 import music from '/music/space-120280.mp3';
 
 let audio = new Audio(music);
-
-//current numbers
-/*
-let finalRubyMaxAmount = 3422;
-let finalAmberMaxAmount = 3394;
-let finalPearlMaxAmount = 3135;
-let finalSapphireMaxAmount = 3479;
-
-*/
 
 export let startWallAnimation = false;
 export let gameStarted = false;
@@ -90,61 +123,7 @@ let amberMaxAmount = 0;
 let pearlMaxAmount = 0;
 let sapphireMaxAmount = 0;
 
-// final ball amount
-
-let finalRubyMaxAmount = 3422;
-let finalAmberMaxAmount = 3394;
-let finalPearlMaxAmount = 3135;
-let finalSapphireMaxAmount = 3479;
-
-let total =
-  finalRubyMaxAmount +
-  finalAmberMaxAmount +
-  finalPearlMaxAmount +
-  finalSapphireMaxAmount;
-console.log(total);
-
 //setup game speed and ball size based on amount of total
-
-let gameSpeed = 400;
-let circleSize = 7.5;
-let gameSize = 0;
-let confettiDropAmount = 200;
-
-if (total < 500) {
-  gameSpeed = 400;
-  circleSize = 30;
-  gameSize = 2;
-  confettiDropAmount = 200;
-} else if (total > 500 && total < 1000) {
-  gameSpeed = 400;
-  circleSize = 20;
-  gameSize = 2;
-  confettiDropAmount = 200;
-} else if (total > 1000 && total < 2000) {
-  gameSpeed = 400;
-  circleSize = 14;
-  gameSize = 3;
-  confettiDropAmount = 200;
-} else if (total > 2000 && total < 5000) {
-  gameSpeed = 400;
-  circleSize = 10;
-  gameSize = 4;
-  confettiDropAmount = 200;
-} else if (total > 5000 && total < 10000) {
-  gameSpeed = 400;
-  circleSize = 8;
-  gameSize = 4;
-  confettiDropAmount = 200;
-} else if (total > 10000 && total < 15000) {
-  gameSpeed = 300;
-  circleSize = 7.5;
-  gameSize = 5;
-} else {
-  gameSpeed = 300;
-  circleSize = 6;
-  gameSize = 6;
-}
 
 let dropsFinished = 0;
 
@@ -304,7 +283,7 @@ async function start() {
 
   // physics setup
 
-  const physics = await initPhysics({ x: 0, y: 10 });
+  const physics = await initPhysics({ x: 0, y: 8 });
   const { RAPIER, step, world } = physics;
 
   // add balls to the physics world
