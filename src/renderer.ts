@@ -9,7 +9,7 @@ export class Renderer {
       width: window.innerWidth,
       height: window.innerHeight,
       backgroundColor: 0xffffff,
-      resolution: 1,
+      resolution: Math.min(window.devicePixelRatio, 2),
       antialias: false,
       autoDensity: true,
       premultipliedAlpha: true,
@@ -18,7 +18,6 @@ export class Renderer {
       powerPreference: 'high-performance',
       resizeTo: window,
     });
-    // PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
     document.body.appendChild(this.app.view as any);
 

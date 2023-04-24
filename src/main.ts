@@ -60,34 +60,34 @@ async function getData() {
 let gameSpeed = 400;
 let circleSize = 7.5;
 let gameSize = 0;
-let confettiDropAmount = 200;
+let confettiDropAmount = 100;
 
 getData().then(() => {
   if (total < 500) {
     gameSpeed = 400;
     circleSize = 30;
     gameSize = 2;
-    confettiDropAmount = 200;
+    confettiDropAmount = 100;
   } else if (total > 500 && total < 1000) {
     gameSpeed = 400;
     circleSize = 20;
     gameSize = 2;
-    confettiDropAmount = 200;
+    confettiDropAmount = 100;
   } else if (total > 1000 && total < 2000) {
     gameSpeed = 400;
     circleSize = 14;
     gameSize = 3;
-    confettiDropAmount = 200;
+    confettiDropAmount = 100;
   } else if (total > 2000 && total < 5000) {
     gameSpeed = 400;
     circleSize = 10;
     gameSize = 4;
-    confettiDropAmount = 200;
+    confettiDropAmount = 100;
   } else if (total > 5000 && total < 10000) {
     gameSpeed = 400;
     circleSize = 8;
     gameSize = 4;
-    confettiDropAmount = 200;
+    confettiDropAmount = 100;
   } else if (total > 10000 && total < 15000) {
     gameSpeed = 300;
     circleSize = 7.5;
@@ -246,22 +246,22 @@ async function start() {
       gsap.to(sapphireCounterText, {
         pixi: { alpha: 1, scaleY: 2, scaleX: 1, y: window.innerHeight - 150 },
         duration: 25,
-        delay: 23,
+        delay: 25,
       });
       gsap.to(rubyCounterText, {
         pixi: { alpha: 1, scaleY: 2, scaleX: 1, y: window.innerHeight - 150 },
         duration: 25,
-        delay: 23,
+        delay: 25,
       });
       gsap.to(amberCounterText, {
         pixi: { alpha: 1, scaleY: 2, scaleX: 1, y: window.innerHeight - 150 },
         duration: 25,
-        delay: 23,
+        delay: 25,
       });
       gsap.to(pearlCounterText, {
         pixi: { alpha: 1, scaleY: 2, scaleX: 1, y: window.innerHeight - 150 },
         duration: 25,
-        delay: 23,
+        delay: 25,
       });
 
       const tl = gsap.timeline({ repeat: 0, delay: 7.5 });
@@ -275,9 +275,7 @@ async function start() {
       tl.to(amberText, { pixi: { alpha: 0 }, duration: 3 });
       tl.to(pearlText, { pixi: { alpha: 0 }, duration: 3 });
       tl.to(sapphireText, { pixi: { alpha: 0 }, duration: 3 });
-      tl.then(() => {
-        console.log('TL Finished');
-      });
+      tl.then(() => {});
     }
   });
 

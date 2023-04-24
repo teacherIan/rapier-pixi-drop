@@ -38,6 +38,7 @@ setTimeout(() => {
     let graphic = new PIXI.Graphics(); // create graphic
     graphic.beginFill('0x' + particleSettings.color);
     graphic.drawCircle(0, 0, particleSettings.particleSize); // (x, y, radius) // gets scaled as a sprite later
+
     graphic.endFill();
 
     // SPRITE
