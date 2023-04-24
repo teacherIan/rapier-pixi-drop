@@ -1,90 +1,96 @@
 import * as PIXI from 'pixi.js';
 import { gsap } from 'gsap';
-
+import { app, stage } from '.././main';
 export let floatContainer = new PIXI.Container();
-floatContainer.width = window.innerWidth;
-// let renderer = new PIXI.Renderer();
 
-let particleCount = 250;
-let particleColors = [
-  '26a3ff',
-  '13ce66',
-  'ff49db',
-  'af8dd1',
-  '9162bf',
-  'ff7849',
-  'ffc82c',
-];
-let particleSettings;
+//wait until app and stage are loaded. Then add floatContainer to stage
 
-for (let i = 0; i < particleCount; i++) {
-  particleSettings = {
-    particleSize: 70,
-    x: Math.floor(Math.random() * window.innerWidth),
-    y: Math.floor(Math.random() * window.innerHeight),
-    scale: Math.floor(Math.random() * 5) / 3,
-    alpha: Math.random() / 2,
-    particleSpeed: Math.floor(Math.min(200, Math.random() * 10000)),
-    color: particleColors[Math.floor(Math.random() * particleColors.length)],
-  };
-  createParticle(particleSettings);
-}
+setTimeout(() => {
+  floatContainer.width = window.innerWidth;
 
-function createParticle(particleSettings) {
-  // GRAPHIC
-  let graphic = new PIXI.Graphics(); // create graphic
-  graphic.beginFill('0x' + particleSettings.color);
-  graphic.drawCircle(0, 0, particleSettings.particleSize); // (x, y, radius) // gets scaled as a sprite later
-  graphic.endFill();
-  graphic.x = Math.random() * window.innerWidth * 2 - window.innerWidth / 2;
-  graphic.y = Math.random() * window.innerHeight * 2 - window.innerHeight / 2;
-  graphic.cullable = true;
+  let particleCount = 4000;
+  let particleColors = [
+    '26a3ff',
+    '13ce66',
+    'ff49db',
+    'af8dd1',
+    '9162bf',
+    'ff7849',
+    'ffc82c',
+  ];
+  let particleSettings;
 
-  // let texture = PIXI.renderer.generateTexture(graphic);
-  // let texture = PIXI.Renderer.generateTexture(graphic);
-
-  //attempt to turn graphic into sprite
-
-  // let texture = renderer.generateTexture(graphic);
-  // let sprite = new PIXI.Sprite(texture);
-
-  // SET POSITIONING
-  gsap.to(graphic, {
-    pixi: {
-      x: particleSettings.x,
-      y: particleSettings.y,
-      scale: particleSettings.scale,
-      alpha: particleSettings.alpha,
-    },
-    duration: 20,
-  });
-  gsap.to(graphic, {
-    pixi: {
+  for (let i = 0; i < particleCount; i++) {
+    particleSettings = {
+      particleSize: 20,
       x: Math.floor(Math.random() * window.innerWidth),
       y: Math.floor(Math.random() * window.innerHeight),
-    },
-    duration: particleSettings.particleSpeed,
-    onComplete: function () {
-      console.log('Function called');
-      animate(graphic, particleSettings);
-    },
-  });
+      scale: Math.floor(Math.random() * 5) / 3,
+      alpha: Math.random() * 0.7,
+      particleSpeed: Math.floor(Math.min(200, Math.random() * 10000)),
+      color: particleColors[Math.floor(Math.random() * particleColors.length)],
+    };
+    createParticle(particleSettings);
+  }
 
-  //use graphic instead of sprite if this does not work
-  floatContainer.addChild(graphic);
+  function createParticle(particleSettings) {
+    // GRAPHIC
+    let graphic = new PIXI.Graphics(); // create graphic
+    graphic.beginFill('0x' + particleSettings.color);
+    graphic.drawCircle(0, 0, particleSettings.particleSize); // (x, y, radius) // gets scaled as a sprite later
+    graphic.endFill();
 
-  // app.stage.addChild(particleSprite);
-}
+    // SPRITE
 
-function animate(object, settings) {
-  gsap.to(object, {
-    pixi: {
-      x: Math.floor(Math.random() * window.innerWidth),
-      y: Math.floor(Math.random() * window.innerHeight),
-    },
-    duration: settings.particleSpeed,
-    onComplete: function () {
-      console.log('Function called');
-    },
-  });
-}
+    let texture = app.renderer.generateTexture(graphic);
+    let sprite = new PIXI.Sprite(texture);
+    sprite.cullable = true;
+    sprite.x = Math.random() * window.innerWidth * 2 - window.innerWidth / 2;
+    sprite.y = Math.random() * window.innerHeight * 2 - window.innerHeight / 2;
+    sprite.alpha = 0;
+    // graphic.destroy();
+    gsap.to(sprite, {
+      // pixi: { alpha: 0.5, duration: 5 },
+    });
+
+    // SET POSITIONING
+    gsap.to(sprite, {
+      pixi: {
+        x: particleSettings.x,
+        y: particleSettings.y,
+        scale: particleSettings.scale,
+        alpha: particleSettings.alpha,
+      },
+      duration: 20,
+    });
+    gsap.to(sprite, {
+      pixi: {
+        x: Math.floor(Math.random() * window.innerWidth),
+        y: Math.floor(Math.random() * window.innerHeight),
+      },
+      duration: particleSettings.particleSpeed,
+      onComplete: function () {
+        console.log('Function called');
+        animate(sprite, particleSettings);
+      },
+    });
+
+    //use graphic instead of sprite if this does not work
+    floatContainer.addChild(sprite);
+
+    // app.stage.addChild(particleSprite);
+  }
+
+  function animate(object, settings) {
+    gsap.to(object, {
+      pixi: {
+        x: Math.floor(Math.random() * window.innerWidth),
+        y: Math.floor(Math.random() * window.innerHeight),
+      },
+      duration: settings.particleSpeed,
+      onComplete: function () {
+        console.log('Function called');
+      },
+    });
+  }
+}, 200);

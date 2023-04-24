@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 import { PixiPlugin } from 'gsap/PixiPlugin';
 import * as PIXI from 'pixi.js';
 import { startWallAnimation } from '../main';
+import { app, stage } from '../main';
 
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
@@ -28,8 +29,9 @@ let animation = gsap.to(value, {
 animation.pause();
 
 export const initWallGraphics = () => {
+  //turn wall graphics into a texture
+
   const wallGraphics = new Graphics();
-  console.log('From initWall');
 
   const drawWalls = (
     walls: {

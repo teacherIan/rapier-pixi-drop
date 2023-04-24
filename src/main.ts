@@ -1,6 +1,7 @@
 import './style/global.css';
 import * as PIXI from 'pixi.js';
 import { Renderer } from './renderer';
+export let { app, stage } = new Renderer();
 import { initPhysics } from './physics/core';
 import { wallScreenArea } from './physics/wallFactory';
 import { initWallGraphics } from './draw/wallGraphics';
@@ -19,7 +20,11 @@ import {
 } from './draw/text';
 import { gsap } from 'gsap';
 import { PixiPlugin } from 'gsap/PixiPlugin';
-import { buttonContainer, headerTimeLine } from './draw/startHeadings';
+import {
+  buttonContainer,
+  headerTimeLine,
+  buttonLabel,
+} from './draw/startHeadings';
 
 //db
 import { db } from './db/db';
@@ -36,6 +41,7 @@ async function getData() {
   const querySnapshot = await getDocs(collection(db, 'points'));
   querySnapshot.forEach((doc) => {
     loaded = true;
+    buttonLabel.text = 'Press Any Key To Start';
 
     if (doc.data().house === 'Ruby') {
       rubyMaxAmountDB += parseInt(doc.data().points);
@@ -144,11 +150,12 @@ let dropsFinished = 0;
 
 async function start() {
   // setup the renderer
-  let { app, stage } = new Renderer();
 
   const container = new PIXI.Container();
   stage.addChild(container);
   let floatContainerVar = stage.addChild(floatContainer);
+  floatContainerVar.cullable = true;
+  console.log(floatContainerVar);
 
   // individual graphics for balls
 
@@ -291,11 +298,6 @@ async function start() {
       tl.to(sapphireText, { pixi: { alpha: 0 }, duration: 3 });
       tl.then(() => {
         console.log('TL Finished');
-        // tl.kill();
-        // rubyText.destroy();
-        // amberText.destroy();
-        // pearlText.destroy();
-        // sapphireText.destroy();
       });
     }
   });

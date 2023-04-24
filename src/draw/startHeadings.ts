@@ -8,7 +8,7 @@ buttonContainer.y = window.innerHeight / 2;
 buttonContainer.pivot.x = 50;
 buttonContainer.pivot.y = 50;
 
-let buttonLabel = new PIXI.Text('Press Any Key To Start', {
+export let buttonLabel = new PIXI.Text('Loading', {
   fill: '#ffffff',
   fontFamily: '"Times New Roman", Times, serif',
   fontSize: 170,

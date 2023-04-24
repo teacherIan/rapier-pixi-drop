@@ -2,9 +2,14 @@ import { Collider, RigidBody } from '@dimforge/rapier2d-compat';
 import { Graphics } from 'pixi.js';
 import { BallDefinition } from '../physics/ballFactory';
 import { ENV_BALL } from './_colorTheme';
+import { app } from '../main';
 
 export const initEnvBallGraphics = () => {
   const envBallGraphics = new Graphics();
+
+  setTimeout(() => {
+    console.log(app);
+  }, 10);
 
   const drawEnvBalls = (
     balls: {
