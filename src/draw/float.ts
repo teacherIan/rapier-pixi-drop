@@ -6,50 +6,35 @@ import { startWallAnimation } from '.././main';
 
 //wait until app and stage are loaded. Then add floatContainer to stage
 
+let particleSettings;
+let particleCount = 1000;
+let particleColors = ['c11c22', 'e46725', '1271b5', 'ffffff'];
+
 setTimeout(() => {
   floatContainer.width = window.innerWidth;
 
-  let particleCount = 4000;
-  let particleColors = [
-    '26a3ff',
-    '13ce66',
-    'ff49db',
-    'af8dd1',
-    '9162bf',
-    'ff7849',
-    'ffc82c',
-  ];
-  let particleSettings;
-
-  for (let i = 0; i < particleCount; i++) {
-    particleSettings = {
-      particleSize: 20,
-      x: Math.floor(Math.random() * window.innerWidth * 2),
-      y: Math.floor(Math.random() * window.innerHeight * 2),
-      scale: Math.floor(Math.random() * 5) / 3,
-      alpha: Math.random() * 0.7,
-      particleSpeed: Math.floor(Math.min(200, Math.random() * 10000)),
-      color: particleColors[Math.floor(Math.random() * particleColors.length)],
-    };
-    createParticle(particleSettings);
+  function setUp() {
+    for (let i = 0; i < particleCount; i++) {
+      particleSettings = {
+        particleSize: 100,
+        x: Math.floor(Math.random() * window.innerWidth * 2),
+        y: Math.floor(Math.random() * window.innerHeight * 2),
+        scale: Math.random() + 0.2,
+        alpha: Math.random() * 1,
+        particleSpeed: Math.floor(Math.min(200, Math.random() * 10000)),
+        color:
+          particleColors[Math.floor(Math.random() * particleColors.length)],
+      };
+      createParticle(particleSettings);
+    }
   }
+
+  setUp();
 
   window.addEventListener('resize', () => {
     if (!startWallAnimation) {
       floatContainer.removeChildren();
-      for (let i = 0; i < particleCount; i++) {
-        particleSettings = {
-          particleSize: 20,
-          x: Math.floor(Math.random() * window.innerWidth * 2),
-          y: Math.floor(Math.random() * window.innerHeight * 2),
-          scale: Math.floor(Math.random() * 5) / 3,
-          alpha: Math.random() * 0.7,
-          particleSpeed: Math.floor(Math.min(200, Math.random() * 10000)),
-          color:
-            particleColors[Math.floor(Math.random() * particleColors.length)],
-        };
-        createParticle(particleSettings);
-      }
+      setUp();
     }
   });
 
@@ -69,12 +54,6 @@ setTimeout(() => {
     sprite.x = Math.random() * window.innerWidth * 2 - window.innerWidth / 2;
     sprite.y = Math.random() * window.innerHeight * 2 - window.innerHeight / 2;
     sprite.alpha = 0;
-
-    window.addEventListener('resize', () => {
-      sprite.x = Math.random() * window.innerWidth * 2 - window.innerWidth / 2;
-      sprite.y =
-        Math.random() * window.innerHeight * 2 - window.innerHeight / 2;
-    });
 
     // SET POSITIONING
     gsap.to(sprite, {
