@@ -134,7 +134,6 @@ async function start() {
   stage.addChild(container);
   let floatContainerVar = stage.addChild(floatContainer);
   floatContainerVar.cullable = true;
-  console.log(floatContainerVar);
 
   // individual graphics for balls
 
@@ -280,7 +279,6 @@ async function start() {
   });
 
   // physics setup
-
   const physics = await initPhysics({ x: 0, y: 8 });
   const { RAPIER, step, world } = physics;
 
@@ -536,7 +534,6 @@ async function start() {
     return app.renderer.generateTexture(confettiIcon);
   });
 
-  console.log(textures);
   let confettiAmount = confettiDropAmount;
   let confetti = new Array(confettiAmount)
     .fill(null)
@@ -560,6 +557,50 @@ async function start() {
 
     confettiContainer.addChild(confettiIconSprite);
   }
+
+  window.addEventListener('resize', () => {
+    //resize confetti
+    confettiContainer.children.forEach((child) => {
+      child.x = Math.random() * window.innerWidth - 10;
+    });
+
+    //resize Text
+    rubyCounterText.x = window.innerWidth / 8;
+    rubyCounterText.y = window.innerHeight;
+
+    amberCounterText.x = window.innerWidth * (3 / 8);
+    amberCounterText.y = window.innerHeight;
+
+    pearlCounterText.x = window.innerWidth * (5 / 8);
+    pearlCounterText.y = window.innerHeight;
+
+    sapphireCounterText.x = window.innerWidth - window.innerWidth / 8;
+    sapphireCounterText.y = window.innerHeight;
+
+    sapphireTextObject.x = window.innerWidth - window.innerWidth / 8;
+    sapphireTextObject.y = -100;
+
+    rubyTextObject.x = window.innerWidth / 8;
+    rubyTextObject.y = -100;
+
+    amberTextObject.x = window.innerWidth * (3 / 8);
+    amberTextObject.y = -100;
+
+    pearlTextObject.x = window.innerWidth * (5 / 8);
+    pearlTextObject.y = -100;
+
+    buttonLabel.anchor.set(0.5);
+
+    floatContainer.children.forEach((child) => {
+      child.x = Math.random() * window.innerWidth * 2;
+      child.y = Math.random() * window.innerHeight * 2;
+    });
+
+    buttonContainer.x = window.innerWidth / 2;
+    buttonContainer.y = window.innerHeight / 2;
+    buttonLabel.x = 50;
+    buttonLabel.y = 50;
+  });
 
   app.ticker.add((delta) => {
     if (dropsFinished == 4) {

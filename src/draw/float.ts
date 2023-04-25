@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { gsap } from 'gsap';
 import { app, stage } from '.././main';
 export let floatContainer = new PIXI.Container();
+import { startWallAnimation } from '.././main';
 
 //wait until app and stage are loaded. Then add floatContainer to stage
 
@@ -23,8 +24,8 @@ setTimeout(() => {
   for (let i = 0; i < particleCount; i++) {
     particleSettings = {
       particleSize: 20,
-      x: Math.floor(Math.random() * window.innerWidth),
-      y: Math.floor(Math.random() * window.innerHeight),
+      x: Math.floor(Math.random() * window.innerWidth * 2),
+      y: Math.floor(Math.random() * window.innerHeight * 2),
       scale: Math.floor(Math.random() * 5) / 3,
       alpha: Math.random() * 0.7,
       particleSpeed: Math.floor(Math.min(200, Math.random() * 10000)),
@@ -32,6 +33,25 @@ setTimeout(() => {
     };
     createParticle(particleSettings);
   }
+
+  window.addEventListener('resize', () => {
+    if (!startWallAnimation) {
+      floatContainer.removeChildren();
+      for (let i = 0; i < particleCount; i++) {
+        particleSettings = {
+          particleSize: 20,
+          x: Math.floor(Math.random() * window.innerWidth * 2),
+          y: Math.floor(Math.random() * window.innerHeight * 2),
+          scale: Math.floor(Math.random() * 5) / 3,
+          alpha: Math.random() * 0.7,
+          particleSpeed: Math.floor(Math.min(200, Math.random() * 10000)),
+          color:
+            particleColors[Math.floor(Math.random() * particleColors.length)],
+        };
+        createParticle(particleSettings);
+      }
+    }
+  });
 
   function createParticle(particleSettings) {
     // GRAPHIC
@@ -49,9 +69,11 @@ setTimeout(() => {
     sprite.x = Math.random() * window.innerWidth * 2 - window.innerWidth / 2;
     sprite.y = Math.random() * window.innerHeight * 2 - window.innerHeight / 2;
     sprite.alpha = 0;
-    // graphic.destroy();
-    gsap.to(sprite, {
-      // pixi: { alpha: 0.5, duration: 5 },
+
+    window.addEventListener('resize', () => {
+      sprite.x = Math.random() * window.innerWidth * 2 - window.innerWidth / 2;
+      sprite.y =
+        Math.random() * window.innerHeight * 2 - window.innerHeight / 2;
     });
 
     // SET POSITIONING
@@ -89,9 +111,6 @@ setTimeout(() => {
         y: Math.floor(Math.random() * window.innerHeight),
       },
       duration: settings.particleSpeed,
-      onComplete: function () {
-        console.log('Function called');
-      },
     });
   }
 }, 200);
