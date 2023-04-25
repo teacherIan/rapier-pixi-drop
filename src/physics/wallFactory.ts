@@ -1,5 +1,5 @@
-import { Vector2, World } from "@dimforge/rapier2d-compat";
-import { RAPIER } from "./core";
+import { Vector2, World } from '@dimforge/rapier2d-compat';
+import { RAPIER } from './core';
 
 export const makeWall = (
   world: World,
@@ -16,7 +16,7 @@ export const makeWall = (
     new RAPIER.Cuboid(definition.size.x / 2, definition.size.y / 2)
   ).setTranslation(0, 0);
   const collider = world.createCollider(colliderDesc, body);
-  collider.setCollisionGroups(0b00000000000111110000000000011111)
+  collider.setCollisionGroups(0b00000000000111110000000000011111);
 
   return { body, collider, definition };
 };
@@ -25,7 +25,6 @@ export const wallScreenArea = (
   world: World,
   RAPIER: RAPIER,
   thickness: number
-
 ) => {
   const walls = [];
 
@@ -38,7 +37,7 @@ export const wallScreenArea = (
     })
   );
 
-    //right
+  //right
   walls.push(
     makeWall(world, RAPIER, {
       angle: 0,
@@ -51,41 +50,50 @@ export const wallScreenArea = (
   //bottom
   walls.push(
     makeWall(world, RAPIER, {
-      size: { y: thickness * 2, x: window.innerWidth },
+      size: { y: thickness * 6, x: window.innerWidth },
       position: { x: window.innerWidth / 2, y: window.innerHeight },
       angle: 0,
     })
   );
 
-    // create middle wall
+  // create middle wall
 
-    walls.push(
-      makeWall(world, RAPIER, {
-        size: { y: window.innerHeight * 5, x: thickness },
-        position: { x: window.innerWidth / 2 - thickness / 2, y: window.innerHeight / 2 },
-        angle: 0,
-      })
-    );
+  walls.push(
+    makeWall(world, RAPIER, {
+      size: { y: window.innerHeight * 5, x: thickness },
+      position: {
+        x: window.innerWidth / 2 - thickness / 2,
+        y: window.innerHeight / 2,
+      },
+      angle: 0,
+    })
+  );
 
-    // create wall between left and middle
+  // create wall between left and middle
 
-    walls.push(
-      makeWall(world, RAPIER, {
-        size: { y: window.innerHeight * 5, x: thickness },
-        position: { x: window.innerWidth / 4 - thickness / 2, y: window.innerHeight / 2 },
-        angle: 0,
-      })
-    );
+  walls.push(
+    makeWall(world, RAPIER, {
+      size: { y: window.innerHeight * 5, x: thickness },
+      position: {
+        x: window.innerWidth / 4 - thickness / 2,
+        y: window.innerHeight / 2,
+      },
+      angle: 0,
+    })
+  );
 
-    // create wall between right and middle
+  // create wall between right and middle
 
-    walls.push(
-      makeWall(world, RAPIER, {
-        size: { y: window.innerHeight * 5, x: thickness },
-        position: { x: window.innerWidth / 4 * 3 - thickness / 2, y: window.innerHeight / 2 },
-        angle: 0,
-      })
-    );
+  walls.push(
+    makeWall(world, RAPIER, {
+      size: { y: window.innerHeight * 5, x: thickness },
+      position: {
+        x: (window.innerWidth / 4) * 3 - thickness / 2,
+        y: window.innerHeight / 2,
+      },
+      angle: 0,
+    })
+  );
 
   return walls;
 };
@@ -95,4 +103,3 @@ export interface WallDefinition {
   size: Vector2;
   angle: number;
 }
-

@@ -20,9 +20,9 @@ export let buttonLabel = new PIXI.Text('Loading', {
   stroke: '#943d3d',
   strokeThickness: 5,
   textBaseline: 'alphabetic',
-  dropShadow: true,
-  dropShadowBlur: 20,
-  dropShadowColor: '#d4d4d4',
+  dropShadow: false,
+  dropShadowBlur: 0,
+  dropShadowColor: '#ffffff',
 
   // whiteSpace: 'pre-line',
 });
